@@ -1,1 +1,1 @@
-# PythonWebCrawling-DeapLearningAI_Package
+# 코딩애플 - 파이썬 웹크롤러 + 딥러닝 AI 패키지 수업정리
