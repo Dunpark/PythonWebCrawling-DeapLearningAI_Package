@@ -29,7 +29,7 @@ from bs4 import BeautifulSoup
 ### 무한 스크롤러 데이터 수집 2(네이버 블로그)
 
 ## 더보기 게시물의 데이터 가져오기
-data = requests.get('https://s.search.naver.com/p/review/49/search.naver?ssc=tab.blog.all&api_type=8&query=%EC%82%AC%EA%B3%BC&start=61&nx_search_query=&nx_and_query=&nx_sub_query=&ac=1&aq=0&spq=0&sm=tab_jum&nso=&prank=60&ngn_country=KR&lgl_rcode=02290107&fgn_region=&fgn_city=&lgl_lat=37.43319&lgl_long=126.993374&enlu_query=IggCAF6CULjEAAAAf0OW4HuKSDHwdp9uf%2FQoPsP5%2F6m%2B99%2FPmzQh7XVW0ACJJWp9oGWOE9RvbI9xfCIhtRdntOGegAKietw9i36ZTQJ6GI4xyDalFFZWXVF1bgYapvZlbi48f5o0qW3Wdpnh%2BtmZScvnV%2FHT6Qgk3jskkdzaBqUz4xUnn1Sssvik52E%3D&enqx_theme=IggCAEeCULgRAAAAh%2FDtntZaiMLGh3DOFtIyqw%2Ft3q4clEos1p2O1NTRYn4NUJzpY2XWim4radqdYrSZDNiELd6nYNJwytlWzreKNul2xLfylQ7CjZHVqCLhCfDfLmMEOVaPYbdbw2RxiX5kzvQc%2BH53BTcRGA4hvzLyCw%3D%3D&abt=')
+requests.get('A%B3%BC&start=61&nx_search_query=&nx_and_query=&nx_sub_query=&ac=1&aq=0&spq=0&sm=tab_jum&nso=&prank=60&ngn_country=KR&lgl_rcode=02290107&fgn_region=&fgn_city=&lgl_lat=37.43319&lgl_long=126.993374&enlu_query=IggCAF6CULjEAAAAf0OW4HuKSDHwdp9uf%2FQoPsP5%2F6m%2B99%2FPmzQh7XVW0ACJJWp9oGWOE9RvbI9xfCIhtRdntOGegAKietw9i36ZTQJ6GI4xyDalFFZWXVF1bgYapvZlbi48f5o0qW3Wdpnh%2BtmZScvnV%2FHT6Qgk3jskkdzaBqUz4xUnn1Sssvik52E%3D&enqx_theme=IggCAEeCULgRAAAAh%2FDtntZaiMLGh3DOFtIyqw%2Ft3q4clEos1p2O1NTRYn4NUJzpY2XWim4radqdYrSZDNiELd6nYNJwytlWzreKNul2xLfylQ7CjZHVqCLhCfDfLmMEOVaPYbdbw2RxiX5kzvQc%2BH53BTcRGA4hvzLyCw%3D%3D&abt=')
 soup = BeautifulSoup(data.text.replace('\\', ''), 'html.parser') # class명에 백슬래시가 들어가있는 경우가 잇음 -> 가져올 때 오류가 나므로 모든 \ 삭제하기    #replace(대상, 결과)   # replace는 text를 대상으로 하기 때문에 get.text 활용 -> 데이터를 문자형식으로 가져옴
 # 위 코드에서 \를 한번 쓰면 특수한 기호를 의미하고 두번 적어야 글자로 인식됨  
 
