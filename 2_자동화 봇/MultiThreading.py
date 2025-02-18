@@ -69,7 +69,7 @@ print(list(result)) # = [3,4,5,6,7]
 a = time.time() # 시작시간 # 코드가 시행되는데 걸리는 시간 확인 가능
 
 from multiprocessing.dummy import Pool as ThreadPool
-pool = ThreadPool(4) 
+pool = ThreadPool(4)  # 몇개의 함수를 병렬처리할 것인 지지
 result = pool.map(함수, url) # url리스트를 넣어 하나하나의 자료가 함수에 들어갔다 나옴 --> 코인가격으로 구성된 결과만 추출되어 모여짐 = 결과적으로 result라는 리스트로 출력
 pool.close() 
 pool.join() 
@@ -82,7 +82,11 @@ print(f'multithreading {b-a}') # 시행시간
 a = time.time() # 시작시간
 for i in url:
     함수(i)
-b = time.time() # 종료시간
+b = time.time   () # 종료시간
 print(f'basic {b-a}') # 시행시간
     
+# multithreading 3.8443076610565186
+# basic 7.979239463806152
+# --> 확연한 성능차이를 확인할 수 있음
+
 
