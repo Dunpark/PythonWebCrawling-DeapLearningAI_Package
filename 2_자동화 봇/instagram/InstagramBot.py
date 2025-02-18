@@ -43,6 +43,7 @@ import time
 #print(e)
 
 ## 인스타그램 자동 로그인 하는 방법
+'''
 driver = webdriver.Chrome() # 처음 셋팅하는 코드
 driver.get('https://instagram.com') #인스타그램 페이지에 모든 데이터가 들어가 있음음 # 인스타 창이 실행되었다가 뒤에 더 명령 처리할 게 없으면 자동으로 꺼짐
 time.sleep(5) # 페이지가 로드하는 데에 필요한 시간을 줌
@@ -54,6 +55,7 @@ password_field = driver.find_element(By.NAME, "password") # 비밀번호란을 �
 password_field.send_keys('비밀번호입력') # 비밀번호란에 입력
 password_field.send_keys(Keys.ENTER) # Keys.하고 control + space를 누르면 브라우저에서 실행시킬 수 있는 동작들 목록이 나옴   # ex) Enters는 Enter키를 누르는 행위
 time.sleep(10) # 위의 코드 실행 후 대기시간
+'''
 
 ## 다른 동작들 예시
 #driver.find_element_by_css_selector('.class명').click() # 원하는 요소 클릭
@@ -61,4 +63,7 @@ time.sleep(10) # 위의 코드 실행 후 대기시간
 #e = driver.find_element_by_css_selector('클릭하고싶은요소')
 #driver.execute_script('arguments[0].click();', e)
 
+
 ### 인스타그램 봇 만들기 3 : 페이지 이동과 이미지 수집
+import urllib.request #이건 import 모여있는 맨위에다가 작성
+urllib.request.urlretrieve(이미지URL, '파일명')
