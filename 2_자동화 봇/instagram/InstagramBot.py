@@ -12,12 +12,14 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By # 업데이트 되어서 코딩애플이랑 다름름
 from selenium.webdriver.common.keys import Keys
 import time
+import urllib.request #url(src)기반으로 이미지 가져오는 데 필요한 라이브러리
+
 ## 파이썬으로 브라우저부터 띄어보기
 # 브라우저에서 하는 모든 웹작업들을 여기서 실행가능
 # 웹페이지에서 데이터 수집도 쉽게 할 수 있음
-#driver = webdriver.Chrome() # 처음 셋팅하는 코드
-#driver.get('https://instagram.com') #인스타그램 페이지에 모든 데이터가 들어가 있음음 # 인스타 창이 실행되었다가 뒤에 더 명령 처리할 게 없으면 자동으로 꺼짐
-#time.sleep(10) # 프로그램의 실행을 () 안의 초만큼 멈춤
+# driver = webdriver.Chrome() # 처음 셋팅하는 코드
+# driver.get('https://instagram.com') #인스타그램 페이지에 모든 데이터가 들어가 있음음 # 인스타 창이 실행되었다가 뒤에 더 명령 처리할 게 없으면 자동으로 꺼짐
+# time.sleep(1000) # 프로그램의 실행을 () 안의 초만큼 멈춤
 # 뜬 인스타그램 창에서 검사를 통해 원하는 데이터의 html상의 위치 찾기
 # 관찰을 통해 원하는 글자 분석하여 class가 ~~인 글자를 찾게 코드 작성
 #e = driver.find_element(By.CSS_SELECTOR, '.x5n08af') # 해당 함수를 작성해 찾아오라고 명령 # .class명을 작성해 class가 일치하는 데이터 추출 #업데이트 되어서 코딩애플이랑 다름 *대문자 주의
@@ -43,19 +45,19 @@ import time
 #print(e)
 
 ## 인스타그램 자동 로그인 하는 방법
-'''
+
 driver = webdriver.Chrome() # 처음 셋팅하는 코드
 driver.get('https://instagram.com') #인스타그램 페이지에 모든 데이터가 들어가 있음음 # 인스타 창이 실행되었다가 뒤에 더 명령 처리할 게 없으면 자동으로 꺼짐
-time.sleep(5) # 페이지가 로드하는 데에 필요한 시간을 줌
+time.sleep(3) # 페이지가 로드하는 데에 필요한 시간을 줌
 # ID 입력
 user_name_field = driver.find_element(By.CSS_SELECTOR, 'input[name="username"]') # username_field = driver.find_element(By.NAME, "username")로도 가능
 user_name_field.send_keys('dun_park2') # '내아이디'가 ID입력창에 자동입력됨
 # 비밀번호 입력
 password_field = driver.find_element(By.NAME, "password") # 비밀번호란을 지정함
-password_field.send_keys('비밀번호입력') # 비밀번호란에 입력
+password_field.send_keys('wildman2001!') # 비밀번호란에 입력
 password_field.send_keys(Keys.ENTER) # Keys.하고 control + space를 누르면 브라우저에서 실행시킬 수 있는 동작들 목록이 나옴   # ex) Enters는 Enter키를 누르는 행위
-time.sleep(10) # 위의 코드 실행 후 대기시간
-'''
+#time.sleep(10) # 위의 코드 실행 후 대기시간
+
 
 ## 다른 동작들 예시
 #driver.find_element_by_css_selector('.class명').click() # 원하는 요소 클릭
@@ -65,5 +67,43 @@ time.sleep(10) # 위의 코드 실행 후 대기시간
 
 
 ### 인스타그램 봇 만들기 3 : 페이지 이동과 이미지 수집
-import urllib.request #이건 import 모여있는 맨위에다가 작성
-urllib.request.urlretrieve(이미지URL, '파일명')
+
+## 인스타그램 페이지에서 #사과 검색페이지의 이미지 수집
+    # 무한스크롤의 형식으로 페이지가 구성되어 있음
+## 사과 검색페이지의 이미지 수집 계획 - TIP. 코딩어떻게 할 지 모를 땐 한글부터 짜기
+    # 1. 로그인 후 
+    # 2. #사과 검색 페이지이동
+    # 첫 사진 클릭
+    # 이미지 저장
+    # 다음 누르고 이미지 저장 *반복     
+
+# 페이지 이동   *여러 줄 동시에 주석 처리하는 방법 : 영어로 타자설정 변환후 control + /
+time.sleep(10)
+
+# 로그인 정보 기억하냐 마냐 뜨는 것 해결 - 클릭가능한 지 확인하는 방법: 웹 브라우저의 부분에 마우스를 갖다댔을 떄 ROle이 버튼이거나 key-board focusable할 때
+e = driver.find_element(By.CSS_SELECTOR, '.xh8yej3')
+driver.execute_script('arguments[0].click();', e)
+driver.implicitly_wait(10)
+
+driver.get('https://www.instagram.com/explore/search/keyword/?q=%23%EC%82%AC%EA%B3%BC') #사과 검색페이지로 이동
+time.sleep(5) # 만약 로딩이나 코드실행이 안되면 알아서 (최대)10초간 기다리라는 의미    *페이지 이동시에는 다시 작성해야 함
+
+
+# # 첫째사진 누름
+#     # 첫번째 사진의 class를 브라우저의 검사페이지에서 찾은 후 파이썬에서 가져오기
+#         # class가 중복되어 있는 경우가 있으므로 꼭 html 검사페이지에서 찾아보기     ex) 1/28
+# #pic1 = driver.find_element(By.CSS_SELECTOR, '_aagw').click() # class가 중복되어 있는 경우 가장 첫번째 자료 하나를 가져옴
+pic1 = driver.find_elements(By.CSS_SELECTOR, '._a6hd')[8].click() # find_elements()를 사용하면 class가 중복된 모든 자료를 리스트의 형식으로 가져옴  # 인덱싱을 통해 원하는 순서를 가져올 수 있음    # 모든 사진들은 대게 같은 class를 가지고 있으므로 2번째 자료는 2번째 게시물의 사진일 것임
+driver.implicitly_wait(10)
+# # 사진저장 - 이미지는 거의 <img>안에 있으므로 img태그 안의 src(이미지경로) 찾기
+이미지 = driver.find_elements(By.CSS_SELECTOR, '.x87ps6o.xh8yej3')[8].get_attribute('src')
+urllib.request.urlretrieve(이미지, '사과_인스타게시글9_사진.jpg')     #urllib.request.urlretrieve(이미지URL, '파일명')
+# 다음으로 이동
+# 사진저장
+
+
+## 주의점:
+    # 페이지 로딩시간이 부족하면 코드가 올바르게 작동하지 않을 가능성 높음 **driver.implicitly(10)써도 잘 안될 수 있음
+    # 여러개의 요소로 이루어진 class같은 경우에 마지막 한 개만으로 차별화할 수 없을 가능성 많음 --> 마지막 2~3개정도 검색해보고 중복되는 지 확인
+    # 중복되면 인덱싱으로 필요한 것들만 추출
+    # 게시글의 특성상 사진만이 아니라 옆으로 넘기거나 동영상이 있는 경우도 있으니까 주의
