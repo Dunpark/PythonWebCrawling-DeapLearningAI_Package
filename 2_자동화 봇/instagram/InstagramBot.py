@@ -1,3 +1,5 @@
+############ 이런식으로 하면 인스타에서 계정 차단함 - 다른 방식으로 따오기
+
 ### 인스타그램 봇 만들기 1: 셀레니움 설치 / 간단한 수집
 # 단순반복 웹업무 자동화하고 싶으면 
 # 구조가 어려운 사이트 크롤링하고 싶으면
@@ -56,7 +58,7 @@ user_name_field.send_keys('dun_park2') # '내아이디'가 ID입력창에 자동
 password_field = driver.find_element(By.NAME, "password") # 비밀번호란을 지정함
 password_field.send_keys('wildman2001!') # 비밀번호란에 입력
 password_field.send_keys(Keys.ENTER) # Keys.하고 control + space를 누르면 브라우저에서 실행시킬 수 있는 동작들 목록이 나옴   # ex) Enters는 Enter키를 누르는 행위
-#time.sleep(10) # 위의 코드 실행 후 대기시간
+time.sleep(10) # 위의 코드 실행 후 대기시간
 
 
 ## 다른 동작들 예시
@@ -77,14 +79,12 @@ password_field.send_keys(Keys.ENTER) # Keys.하고 control + space를 누르면 
     # 이미지 저장
     # 다음 누르고 이미지 저장 *반복     
 
-# 페이지 이동   *여러 줄 동시에 주석 처리하는 방법 : 영어로 타자설정 변환후 control + /
-time.sleep(10)
-
 # 로그인 정보 기억하냐 마냐 뜨는 것 해결 - 클릭가능한 지 확인하는 방법: 웹 브라우저의 부분에 마우스를 갖다댔을 떄 ROle이 버튼이거나 key-board focusable할 때
 e = driver.find_element(By.CSS_SELECTOR, '.xh8yej3')
-driver.execute_script('arguments[0].click();', e)
+driver.execute_script('arguments[0].click();', e) # 클릭이 잘 안될 떄에는 # execute_script:는 Javascript 실행 # arguments[0].click()는 강제클릭 # e는 대상
 driver.implicitly_wait(10)
 
+# 페이지 이동   *여러 줄 동시에 주석 처리하는 방법 : 영어로 타자설정 변환후 control + /
 driver.get('https://www.instagram.com/explore/search/keyword/?q=%23%EC%82%AC%EA%B3%BC') #사과 검색페이지로 이동
 time.sleep(5) # 만약 로딩이나 코드실행이 안되면 알아서 (최대)10초간 기다리라는 의미    *페이지 이동시에는 다시 작성해야 함
 
@@ -93,17 +93,53 @@ time.sleep(5) # 만약 로딩이나 코드실행이 안되면 알아서 (최대)
 #     # 첫번째 사진의 class를 브라우저의 검사페이지에서 찾은 후 파이썬에서 가져오기
 #         # class가 중복되어 있는 경우가 있으므로 꼭 html 검사페이지에서 찾아보기     ex) 1/28
 # #pic1 = driver.find_element(By.CSS_SELECTOR, '_aagw').click() # class가 중복되어 있는 경우 가장 첫번째 자료 하나를 가져옴
-pic1 = driver.find_elements(By.CSS_SELECTOR, '._a6hd')[8].click() # find_elements()를 사용하면 class가 중복된 모든 자료를 리스트의 형식으로 가져옴  # 인덱싱을 통해 원하는 순서를 가져올 수 있음    # 모든 사진들은 대게 같은 class를 가지고 있으므로 2번째 자료는 2번째 게시물의 사진일 것임
-driver.implicitly_wait(10)
-# # 사진저장 - 이미지는 거의 <img>안에 있으므로 img태그 안의 src(이미지경로) 찾기
-이미지 = driver.find_elements(By.CSS_SELECTOR, '.x87ps6o.xh8yej3')[8].get_attribute('src')
-urllib.request.urlretrieve(이미지, '사과_인스타게시글9_사진.jpg')     #urllib.request.urlretrieve(이미지URL, '파일명')
-# 다음으로 이동
-# 사진저장
+# pic1 = driver.find_elements(By.CSS_SELECTOR, '._a6hd')[8].click() # find_elements()를 사용하면 class가 중복된 모든 자료를 리스트의 형식으로 가져옴  # 인덱싱을 통해 원하는 순서를 가져올 수 있음    # 모든 사진들은 대게 같은 class를 가지고 있으므로 2번째 자료는 2번째 게시물의 사진일 것임
+# driver.implicitly_wait(10)
+# # # 사진저장 - 이미지는 거의 <img>안에 있으므로 img태그 안의 src(이미지경로) 찾기
+# 이미지 = driver.find_elements(By.CSS_SELECTOR, '.x87ps6o.xh8yej3')[8].get_attribute('src')
+# urllib.request.urlretrieve(이미지, '사과_인스타게시글9_사진.jpg')     #urllib.request.urlretrieve(이미지URL, '파일명')
+# time.sleep(3)
 
+# # 게시글 나간 후 다음으로 이동
+#     # 게시글 나가기
+# out = driver.find_elements(By.CSS_SELECTOR, '.xurb0ha.xcdnw81')[1].click()
+# driver.implicitly_wait(10)
+#     # 다음 이동
+# pic2 = driver.find_elements(By.CSS_SELECTOR, '._a6hd')[9].click() # find_elements()를 사용하면 class가 중복된 모든 자료를 리스트의 형식으로 가져옴  # 인덱싱을 통해 원하는 순서를 가져올 수 있음    # 모든 사진들은 대게 같은 class를 가지고 있으므로 2번째 자료는 2번째 게시물의 사진일 것임
+# driver.implicitly_wait(10)
+# # 사진저장
+# 이미지 = driver.find_elements(By.CSS_SELECTOR, '.x87ps6o.xh8yej3')[9].get_attribute('src')
+# urllib.request.urlretrieve(이미지, '사과_인스타게시글10_사진.jpg')     
+
+
+
+## 10개의 게시물에서 사진을 가져오는 크롤러 + 사진이 아니면 무시(ex) 동영상은 pass)
+
+for i in range(0,9):
+    try:
+        pic = driver.find_elements(By.CSS_SELECTOR, '._a6hd')[i].click() # find_elements()를 사용하면 class가 중복된 모든 자료를 리스트의 형식으로 가져옴  # 인덱싱을 통해 원하는 순서를 가져올 수 있음    # 모든 사진들은 대게 같은 class를 가지고 있으므로 2번째 자료는 2번째 게시물의 사진일 것임
+        driver.implicitly_wait(10)
+        # # 사진저장 - 이미지는 거의 <img>안에 있으므로 img태그 안의 src(이미지경로) 찾기
+        이미지 = driver.find_elements(By.CSS_SELECTOR, '.x87ps6o.xh8yej3')[i].get_attribute('src')
+        urllib.request.urlretrieve(이미지, f'사과_인스타게시글{i}_사진.jpg')     #urllib.request.urlretrieve(이미지URL, '파일명')
+        time.sleep(3)
+        # 게시글 나간 후 다음으로 이동
+        out = driver.find_elements(By.CSS_SELECTOR, '.xurb0ha.xcdnw81')[1].click()
+        driver.implicitly_wait(10)
+    except:
+        print(f'{i}게시물은 사진이 아닙니다')
+
+## 시도해볼만한 추가 기능들
+    # 댓글 작성하는 건 ID 작성하는 것이랑 똑같음 - 댓글알바 가능
+    # 단시간에 너무 많이 수집하면 차단하는 사이트도 있음 주의
 
 ## 주의점:
     # 페이지 로딩시간이 부족하면 코드가 올바르게 작동하지 않을 가능성 높음 **driver.implicitly(10)써도 잘 안될 수 있음
     # 여러개의 요소로 이루어진 class같은 경우에 마지막 한 개만으로 차별화할 수 없을 가능성 많음 --> 마지막 2~3개정도 검색해보고 중복되는 지 확인
+    # 클래스에 속해 있는 클래스 찾기: ('.클래스1 .클래스2') 넣기 
     # 중복되면 인덱싱으로 필요한 것들만 추출
     # 게시글의 특성상 사진만이 아니라 옆으로 넘기거나 동영상이 있는 경우도 있으니까 주의
+    # 지정되는 요소 잘 보기
+
+### 인스타그램 봇 만들기 4: 좋아요 & 댓글 자동화는?
+
