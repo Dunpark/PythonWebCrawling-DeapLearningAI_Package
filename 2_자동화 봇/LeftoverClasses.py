@@ -111,3 +111,21 @@ garen.hello()
 
 
 ### Python 크롤링을 막아보자 & 뚫어봊(Amazon.com)
+
+## 크롤러 방지 방법
+# 크롤러 방지기술 포함 사이트 수집해보기
+import requests
+# Amazon 아무 상품이나 검색해서 get 요청 해보기
+r = requests.get('http://amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Ddigital-text&field-keywords=monitor&crid=15KA6XVUO2VUH&sprefix=mo%2Cdigital-text%2C476')
+print(r.status_code) # 400이나 500몇이 뜨면 방어기제로 차단되었다는 의미 --> 아마존은 API를 구매해서 사용하도록 되어 있음
+print(r.content)
+
+## 위와 같은 크롤링 보안 우회법:
+# Amazon에 접속시 amazon은 이용자의 접속정보(request headers)를 알 수 있음
+    # --> 이를 기반으로 거르는 것
+# Amazon 사이트를 브라우저에서 network탭을 들어가 확인하면 headers탭이 있는데 여기서 이용자의 접속정보를 알 수 있음
+    # 이 중에서 user-agent 변수가 중요함 --> 접속기기, 브라우저 등을 알 수 있음 *만약 정보가 제대로 안 적혀 있으면 서버에서 제공 안하도록 설정해 놓은 것.
+    # 파이썬에서 변수에 'user-agent' : '브라우저상의 user-agent 정보' 라는 딕셔너리 기입
+    # r = requests.get('사이트 경로', headers = 변수)라는 코드를 작성해 사이트 가져오기 --> status코드가 200대가 나오면 우회성공한 것
+
+
