@@ -112,20 +112,70 @@ garen.hello()
 
 ### Python 크롤링을 막아보자 & 뚫어봊(Amazon.com)
 
-## 크롤러 방지 방법
-# 크롤러 방지기술 포함 사이트 수집해보기
-import requests
-# Amazon 아무 상품이나 검색해서 get 요청 해보기
-r = requests.get('http://amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Ddigital-text&field-keywords=monitor&crid=15KA6XVUO2VUH&sprefix=mo%2Cdigital-text%2C476')
-print(r.status_code) # 400이나 500몇이 뜨면 방어기제로 차단되었다는 의미 --> 아마존은 API를 구매해서 사용하도록 되어 있음
-print(r.content)
+# ## 크롤러 방지 방법
+# # 크롤러 방지기술 포함 사이트 수집해보기
+# import requests
+# # Amazon 아무 상품이나 검색해서 get 요청 해보기
+# r = requests.get('http://amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Ddigital-text&field-keywords=monitor&crid=15KA6XVUO2VUH&sprefix=mo%2Cdigital-text%2C476')
+# print(r.status_code) # 400이나 500몇이 뜨면 방어기제로 차단되었다는 의미 --> 아마존은 API를 구매해서 사용하도록 되어 있음
+# print(r.content)
 
 ## 위와 같은 크롤링 보안 우회법:
 # Amazon에 접속시 amazon은 이용자의 접속정보(request headers)를 알 수 있음
-    # --> 이를 기반으로 거르는 것
+    # --> 이를 기반으로 거르는 것(그냥 접속하면 headers가 없거나 python으로 찍힘)
 # Amazon 사이트를 브라우저에서 network탭을 들어가 확인하면 headers탭이 있는데 여기서 이용자의 접속정보를 알 수 있음
     # 이 중에서 user-agent 변수가 중요함 --> 접속기기, 브라우저 등을 알 수 있음 *만약 정보가 제대로 안 적혀 있으면 서버에서 제공 안하도록 설정해 놓은 것.
     # 파이썬에서 변수에 'user-agent' : '브라우저상의 user-agent 정보' 라는 딕셔너리 기입
     # r = requests.get('사이트 경로', headers = 변수)라는 코드를 작성해 사이트 가져오기 --> status코드가 200대가 나오면 우회성공한 것
 
+# 코드예시 - Header 설정
+'''
+import requests
 
+헤더스 = {
+  'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36'
+} # User-Agent 대문자 안되면 소문자로 해보기
+
+r = requests.get('https://www.amazon.com/s?k=monitor&ref=nb_sb_noss_2', headers=헤더스) # headers라는 파라미터를 입력하는 것       # --> User-agent를 파이썬에서 브라우저의 요청으로 바꾼 것임
+print(r.content)    # 200은 뜨지만 터미널에서 보았을 때 데이터가 안 들어있고 봇이라는 의심문구가 뜸 = 캡쳐에 걸린 것
+print(r.status_code)
+
+'''
+
+# 2번째 (추가)우회법: 쿠키 활용하기
+    # 브라우저의 application 탭에 들어가면 왼쪽 리스트 중 Cookies라는 항목이 있는데 이는 amazon이 브라우저에 몰래 저장해놓은 정보들을 의미함 = 크롤러 보안 
+    # 쿠키를 그대로 복사해서 파라미터로 한번 더 추가
+        # 네트워크 탭 다시 들어가서 새로고침했을 때 뜨는 파일 중 맨 처음에 뜨는 파일을 눌러
+        # 아래로 스크롤하다보면 Request headers 부분에 cookie정보가 있는 것을 확인할 수 있음
+        # 전체를 복사 해서 파이썬에 붙여놓고 딕셔너리의 형태로 바꾼 다음 새로운 변수에 저장하기 # 복붙했을 때 딕셔너리로 되어 있는 것들은 지우기
+            # 이 과정을 해주는 기능도 찾아보면 있음
+        # requests.get()의 파라미터에 추가하면 끝
+
+
+
+# 코드예시 - Cookie 설정
+'''
+# ubid-main=135-239398; session-id=141293092; 어쩌구=저쩌구; ... : 브라우저에서 복붙한 cookie 형태
+    # 딕셔너리와 비슷하게 만들어주기 위해서 {}로 감싸고 키랑 값 '' = '',로 구분
+
+cookie원본 = 'ubid-main=135-239398; session-id=141293092; 어쩌구=저쩌구; ... '
+cookie딕셔너리로 = {'ubid-main' = '135-239398', 'session-id' = '141293092', ... } 
+
+r = requests.get('URL정보기입', headers = 'headers 정보기입', cookies = 'cookie 정보기입')
+'''
+
+## 에러처리: 에러나서 코드가 멈추는 것을 예방하려면
+# status code를 기반으로 성공여부를 if, else로 구분 
+'''
+if r.status_code == 200:
+    print(soup.select('.~~)[0])
+else :
+    print('에러났어요')
+'''
+# try, except 활용하기 - 에러 여부에 따라 try, else 구분
+'''
+try:
+    print(soup.select('.~~~')[110]) # 이거를 해보고
+except:
+    print('안되네요;)   # 혹시 에러 뜨면 이거 해보기
+'''
