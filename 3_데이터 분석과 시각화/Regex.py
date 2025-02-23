@@ -45,7 +45,7 @@ a = re.findall('\d', 'abc안녕하세요ㅋㅋ123') # \d는 숫자가 포함되�
 
 # \S는 스페이스바가 아닌 모든 것 = 모든 문자    
 
-a = re.findall('ㅋ+', 'abcd$f^g3545 ㅋㅋㅋ안녕하세요123')    # +는 반복해서 찾으라고 시킬 때    *단일한 대상은 무시함   = greedy하게 찾는다고 표현하기도 ㅏㅁ
+a = re.findall('ㅋ+', 'abcd$f^g3545 ㅋㅋㅋ안녕하세요123')    # +는 반복해서 찾으라고 시킬 때    *단일한 대상은 무시고 연속된대상은 하나로 리스트에 추가   = greedy하게 찾는다고 표현하기도 함
 
 a = re.findall('abc', 'abcdABC$f^g3545 ㅋㅋㅋ안녕하세요123', re.IGNORECASE)    # re.IGNORECASE 대문자와 소문자 구분없이 찾는 방법
 
@@ -64,5 +64,42 @@ print(a)
 
 # Q1. 이메일형식이 맞는지 판단하는 정규식을 만들어보십시오. 
 
-결과 = re.findall(['[a-z]\@[a-z].com'], 'abc@example.com')
-print(결과)
+# Correct Ans
+결과 = re.findall('\S+@\S+\.\S+', 'abc@example.com')    # 여러개의 조건을 잡을 때에는 그냥 ''안에 이어쓰면됨됨
+print(f'A1 : {결과}')
+
+
+# Q2. 상품목록에 Mirror 또는 Sofa라는 영단어가 포함되어있으면 카테고리컬럼에 '가구'라고 기록하고 싶습니다. 
+import pandas as pd
+raw = pd.read_excel(r'D:\2025\일\개강전\개강전까지의 코딩공부\코딩애플_파이썬웹크롤러&딥러닝AI_패키지\3_데이터 분석과 시각화\product.xlsx', engine = "openpyxl")  # (경로, 파일형식에 따른 엔진) # r''로 \이중기능 무효화
+print(raw)
+
+def 함수(a):
+  if re.search('Mirror|Sofa', str(a)) :
+    return '가구'
+raw['카테고리'] = raw['상품목록'].apply(함수)
+print(raw)
+
+# Q3. 상품목록에 글자가 없고 숫자만 있으면 그 칸은 '에러'라는 단어로 바꾸고 싶습니다.
+    # 숫자만 있다 = 문자가 없다
+
+# My ANs
+raw = pd.read_excel(r'D:\2025\일\개강전\개강전까지의 코딩공부\코딩애플_파이썬웹크롤러&딥러닝AI_패키지\3_데이터 분석과 시각화\product.xlsx', engine = "openpyxl")  # (경로, 파일형식에 따른 엔진) # r''로 \이중기능 무효화
+print(raw)
+
+def 함수2(b):   # re함수도 대상을 string으로 바궈야 적용가능
+  if re.findall('[a-z]', str(b)): # []를 씌어줘야 a-z까지의 글자 하나하나가 포함되어 있는 지 확인한다는 의미임
+    return b
+  else:
+    return 'error'
+  
+raw['상품목록'] = raw['상품목록'].apply(함수2)
+print(raw)
+
+# Corret Ans
+def 함수(a):
+  if re.search('\D', str(a)) :
+    return a
+  else :
+    return '에러'
+raw['카테고리'] = raw['카테고리'].apply(함수)
