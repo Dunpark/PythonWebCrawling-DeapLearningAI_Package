@@ -118,3 +118,5 @@ encoders.encode_base64(part)
 part.add_header('Content-Disposition', 'attachment; filename="경로제외보낼파일명"')
 msg.attach(part)
 '''
+
+
