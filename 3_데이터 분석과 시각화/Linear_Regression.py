@@ -74,30 +74,73 @@
 
 ## 그래서 회귀분석은 데이터 두개의 관계를 찾고 싶을 때 사용
 
+# import pandas as pd
+# import numpy as np
+# import statsmodels.api as sm
+# df = pd.read_csv(r'D:\2025\일\개강전\개강전까지의 코딩공부\코딩애플_파이썬웹크롤러&딥러닝AI_패키지\3_데이터 분석과 시각화\california_housing.csv')      # california 집값데이터
+# #print(df)
+# # 지도 블록단위로 블록에 있는 모든 집의 데이터를 하나의 인덱스로 가짐 ex) rooms: 한 블록 내에 있는 모든 집들의 방 개수
+#     # income: 블롥에 있는 모든 가구 income의 중앙값
+#     # price: 블록에 있는 모든 가구 집값의 중앙값
+
+# ## 위의 데이터를 기반으로 집값 예측 모델 만들어보기
+# # 집값은 어떤 컬럼과 관련이 있을까?
+#     # 가설: 집값 = yearx? + room? + bedroomsx?
+#         # y= ax1 + bx2 + cx3
+# # y값 형식: 
+#     # df['price'] : 시리즈데이터로 리스트와 같은 취급을 받음
+# # x값 형식:
+#     # [[year1, rooms1, bedrooms1], [year2, rooms2, bedrooms2]..]와 같은 형식으로 만들어야 함
+#     # 판다스로? df[['year', 'rooms', 'bedrooms']] 
+# model = sm.OLS(df['price'], df[['year', 'rooms', 'bedrooms']]).fit()  # x에 3가지 값이 들어감, y = price
+# #print(model.summary()) # R-squared = 0.751: 어느정도 유의미하다고 판단 가능
+# ## 결과해석
+#     # 3개의 독립변수에 따른 coefficient가 출력됨
+#         # 각각의 p>|t|값을 통해 각 coefficient가 유의미한 지 확인할 수 있음
+
+# ## 그럼이제 추정도 가능 --> coefficient와 intercept기반으로 식을 세운 후 대입해 직접 추정 OR predict코드작성
+# a = model.predict([[20, 1000, 200]])    # 이때에도 [[a, b, c]]와 같은 형식으로 특정데이터 집어넣기
+# print(a)
+
+## 여러개 동시에검사하고 싶으면 .predict([[a, b, c], [d, e, f], ...)와 같이 작성하면 됨됨
+
+
+### 회귀분석 3 : 나이로 소득을 예측해보자 (Polynomial Regression)
+
+## 소득 분석
+
+from scipy.optimize import curve_fit    # 곡선 추정할 때 사용하는 함수
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-import statsmodels.api as sm
-df = pd.read_csv(r'D:\2025\일\개강전\개강전까지의 코딩공부\코딩애플_파이썬웹크롤러&딥러닝AI_패키지\3_데이터 분석과 시각화\california_housing.csv')      # california 집값데이터
-#print(df)
-# 지도 블록단위로 블록에 있는 모든 집의 데이터를 하나의 인덱스로 가짐 ex) rooms: 한 블록 내에 있는 모든 집들의 방 개수
-    # income: 블롥에 있는 모든 가구 income의 중앙값
-    # price: 블록에 있는 모든 가구 집값의 중앙값
 
-## 위의 데이터를 기반으로 집값 예측 모델 만들어보기
-# 집값은 어떤 컬럼과 관련이 있을까?
-    # 가설: 집값 = yearx? + room? + bedroomsx?
-        # y= ax1 + bx2 + cx3
-# y값 형식: 
-    # df['price'] : 시리즈데이터로 리스트와 같은 취급을 받음
-# x값 형식:
-    # [[year1, rooms1, bedrooms1], [year2, rooms2, bedrooms2]..]와 같은 형식으로 만들어야 함
-    # 판다스로? df[['year', 'rooms', 'bedrooms']] 
-model = sm.OLS(df['price'], df[['year', 'rooms', 'bedrooms']]).fit()  # x에 3가지 값이 들어감, y = price
-#print(model.summary()) # R-squared = 0.751: 어느정도 유의미하다고 판단 가능
-## 결과해석
-    # 3개의 독립변수에 따른 coefficient가 출력됨
-        # 각각의 p>|t|값을 통해 각 coefficient가 유의미한 지 확인할 수 있음
+df = pd.read_table(r'D:\2025\일\개강전\개강전까지의 코딩공부\코딩애플_파이썬웹크롤러&딥러닝AI_패키지\3_데이터 분석과 시각화\income.txt')
+print(df)   # income: 평균소득
 
-## 그럼이제 추정도 가능 --> coefficient와 intercept기반으로 식을 세운 후 대입해 직접 추정 OR predict코드작성
-a = model.predict([[20, 1000, 200]])    # 이때에도 [[a, b, c]]와 같은 형식으로 특정데이터 집어넣기
-print(a)
+## Q. 나이를 알면 소득을 추측할 수 있을까?
+# 데이터 다룰 때 항상 이상치(빈칸 = NAN) 주의
+    # 빈 행은 제거하거나 평균값으로 넣거나해서 해결
+df = df.dropna() #하면 na인 행이 제거됨
+# scatterplot으로 데이터 시각화해보기
+#plt.scatter(df['age'], df['income'])    # 나이를 x축에 소득을 y축에
+#plt.show()  # 분포가 linear하지 않는 경우에는 곡선을 사용하여 선을 그려야 함
+    # y = 곡선 = 이차함수 = ax + bx^2 + c 
+
+# curve_fit(함수, x축 데이터, y축데이터)
+    # 함수는? : y = a*x + b*x**2 + c 수식 작성하기
+def 함수(x, a, b, c):
+    return a*x + b*x**2 + c     # 3차함수의 경우에는 그냥 3차함수 수식을 넣으면 됨
+
+opt, cov = curve_fit(함수, df['age'], df['income'])     # curve_fit() 실행하면 그 자리에 데이터 2종 남음
+    # cov: covariance의 약자로 = 공분산(2개의 확률변수의 선형관계를 나타내는 값)
+print(opt)  # a,b,c 값을 의미(coefficients) --> y= 73x - 8x^2 -7
+a,b,c = opt
+
+## 곡선을 포함한 scatterplot 그려보기
+x = list(set(df['age'].values)) # line그래프의 x축값들을 설정하기 위해 나이의 고유값들을 리스트 형식으로 추출
+
+# Line plot을 그릴때에는 x축값에 numpy array의 형식을 사용해야 함
+x = np.array(x)   # 리스트를 numpy array로 변환시켜주는 코드  *array는 리스트랑 똑같이 생겼지만 수학계산 시 행렬쓸 일이 있을 때 활용됨
+plt.plot(x, 함수(x, a, b, c))   # x축에는 나이가, y축에는 직선 결과값    # 직접 함수를 넣어 설정하는 것도 가능
+plt.scatter(df['age'], df['income'])    # 나이를 x축에 소득을 y축에
+plt.show()
